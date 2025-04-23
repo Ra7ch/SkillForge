@@ -17,6 +17,7 @@ export default function ClientRegistration({ navigateTo, onComplete }) {
     name: "",
     email: "",
     phone: "",
+    password: "",
     companyName: "",
     clientType: "",
     servicesNeeded: [],
@@ -64,6 +65,10 @@ export default function ClientRegistration({ navigateTo, onComplete }) {
         newErrors.email = "Email is invalid"
       }
       if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
+      if (!formData.password) newErrors.password = "Password is required"
+      else if (formData.password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters"
+      }
     } else if (currentStep === 2) {
       if (!formData.clientType) newErrors.clientType = "Please select a client type"
       if (formData.servicesNeeded.length === 0) newErrors.servicesNeeded = "Please select at least one service"
@@ -168,6 +173,21 @@ export default function ClientRegistration({ navigateTo, onComplete }) {
                   className={errors.phone ? "border-red-500" : ""}
                 />
                 {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={errors.password ? "border-red-500" : ""}
+                />
+                {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+                <p className="text-xs text-gray-500">Must be at least 6 characters</p>
               </div>
 
               <div className="space-y-2">

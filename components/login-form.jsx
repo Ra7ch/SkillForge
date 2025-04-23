@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 
 export default function LoginForm({ navigateTo, onLogin }) {
   const [formData, setFormData] = useState({
-    email: "",
+    identifier: "",
     password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -28,10 +28,8 @@ export default function LoginForm({ navigateTo, onLogin }) {
   const validateForm = () => {
     const newErrors = {}
 
-    if (!formData.email) {
-      newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid"
+    if (!formData.identifier) {
+      newErrors.identifier = "Email or username is required"
     }
 
     if (!formData.password) {
@@ -48,9 +46,13 @@ export default function LoginForm({ navigateTo, onLogin }) {
     if (validateForm()) {
       // In a real app, you would authenticate with a server here
       // For demo purposes, we'll just simulate a successful login
+      
+      // Determine if the identifier is an email or username
+      const isEmail = formData.identifier.includes('@');
+      
       onLogin({
         name: "John Doe",
-        email: formData.email,
+        email: isEmail ? formData.identifier : "john.doe@example.com", // This would come from the server in a real app
         type: "worker", // This would come from the server in a real app
       })
     }
@@ -71,17 +73,17 @@ export default function LoginForm({ navigateTo, onLogin }) {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="identifier">Email or Username</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="your.email@example.com"
-                value={formData.email}
+                id="identifier"
+                name="identifier"
+                type="text"
+                placeholder="your.email@example.com or username"
+                value={formData.identifier}
                 onChange={handleChange}
-                className={errors.email ? "border-red-500" : ""}
+                className={errors.identifier ? "border-red-500" : ""}
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.identifier && <p className="text-red-500 text-sm">{errors.identifier}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>

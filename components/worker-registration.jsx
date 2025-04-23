@@ -12,13 +12,17 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import axios from "axios"
 
 export default function WorkerRegistration({ navigateTo, onComplete }) {
   const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     whatsapp: "",
     age: "",
+    password: "",
     profession: "",
     experience: "",
     specializations: [],
@@ -83,10 +87,18 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
 
     if (currentStep === 1) {
       if (!formData.name.trim()) newErrors.name = "Name is required"
+      if (!formData.email.trim()) newErrors.email = "Email is required"
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = "Email is invalid"
+      }
       if (!formData.whatsapp.trim()) newErrors.whatsapp = "WhatsApp number is required"
       if (!formData.age.trim()) newErrors.age = "Age is required"
       else if (isNaN(formData.age) || Number.parseInt(formData.age) < 18 || Number.parseInt(formData.age) > 100) {
         newErrors.age = "Please enter a valid age between 18 and 100"
+      }
+      if (!formData.password) newErrors.password = "Password is required"
+      else if (formData.password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters"
       }
     } else if (currentStep === 2) {
       if (!formData.profession) newErrors.profession = "Please select a profession"
@@ -117,10 +129,44 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
     window.scrollTo(0, 0)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateStep(step)) {
-      // In a real app, you would submit to a server here
-      onComplete(formData)
+      setIsSubmitting(true);
+      
+      try {
+        // Generate a Google Meet link (in a real app, you'd use the Google Calendar API)
+        const meetingId = Math.random().toString(36).substring(2, 10);
+        const googleMeetLink = `https://meet.google.com/${meetingId}`;
+        
+        // Format date to a readable string
+        const formattedDate = format(formData.assessmentDate, "PPP p");
+        
+        // Send data to n8n webhook
+        await axios.post("https://ra7ch.app.n8n.cloud/webhook-test/lead-submission", {
+          name: formData.name,
+          phone: formData.whatsapp,
+          email: formData.email,
+          assessmentDate: formattedDate,
+          profession: formData.profession,
+          meetingLink: googleMeetLink
+        });
+        
+        // Update formData with the meeting link before completing
+        const updatedFormData = {
+          ...formData,
+          googleMeetLink
+        };
+        
+        // In a real app, you would submit to a server here
+        onComplete(updatedFormData);
+        
+      } catch (error) {
+        console.error("Error sending data to webhook:", error);
+        // Still complete the registration even if webhook fails
+        onComplete(formData);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   }
 
@@ -175,6 +221,20 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={errors.email ? "border-red-500" : ""}
+                />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="whatsapp">WhatsApp Number</Label>
                 <Input
                   id="whatsapp"
@@ -199,6 +259,21 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
                   className={errors.age ? "border-red-500" : ""}
                 />
                 {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={errors.password ? "border-red-500" : ""}
+                />
+                {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+                <p className="text-xs text-gray-500">Must be at least 6 characters</p>
               </div>
             </CardContent>
           </>
@@ -469,18 +544,45 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
 
         <Card>
           {renderStep()}
+
+          {step === 4 && (
+            <div className="px-6 pb-0">
+              <div className="bg-blue-50 p-4 rounded-md mt-2">
+                <p className="text-sm text-blue-700">
+                  After registration, you'll receive a WhatsApp message with your assessment details and a Google Meet link for the virtual assessment.
+                </p>
+              </div>
+            </div>
+          )}
+
           <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={handleBack} disabled={step === 1}>
+            <Button variant="outline" onClick={handleBack} disabled={step === 1 || isSubmitting}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Back
             </Button>
 
             {step < 4 ? (
-              <Button onClick={handleNext} className="bg-orange-500 hover:bg-orange-600">
+              <Button onClick={handleNext} className="bg-orange-500 hover:bg-orange-600" disabled={isSubmitting}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
-                Complete Registration <Check className="ml-2 h-4 w-4" />
+              <Button 
+                onClick={handleSubmit} 
+                className="bg-green-600 hover:bg-green-700"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Complete Registration <Check className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             )}
           </CardFooter>
