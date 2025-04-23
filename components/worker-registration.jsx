@@ -373,28 +373,63 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.assessmentDate ? format(formData.assessmentDate, "PPP") : <span>Select a date</span>}
+                      {formData.assessmentDate ? format(formData.assessmentDate, "PPP p") : <span>Select a date and time</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={formData.assessmentDate}
-                      onSelect={(date) => {
-                        setFormData((prev) => ({ ...prev, assessmentDate: date }))
-                        if (errors.assessmentDate) {
-                          setErrors((prev) => ({ ...prev, assessmentDate: "" }))
-                        }
-                      }}
-                      initialFocus
-                      disabled={(date) => {
-                        // Disable dates in the past and weekends
-                        const today = new Date()
-                        today.setHours(0, 0, 0, 0)
-                        const day = date.getDay()
-                        return date < today || day === 0 || day === 6
-                      }}
-                    />
+                    <div className="p-3">
+                      <Calendar
+                        mode="single"
+                        selected={formData.assessmentDate}
+                        onSelect={(date) => {
+                          // Preserve the time if already set
+                          if (date) {
+                            const currentTime = formData.assessmentDate ? 
+                              new Date(formData.assessmentDate) : 
+                              new Date(date);
+                            if (formData.assessmentDate) {
+                              date.setHours(currentTime.getHours());
+                              date.setMinutes(currentTime.getMinutes());
+                            }
+                          }
+                          setFormData((prev) => ({ ...prev, assessmentDate: date }))
+                          if (errors.assessmentDate) {
+                            setErrors((prev) => ({ ...prev, assessmentDate: "" }))
+                          }
+                        }}
+                        initialFocus
+                        disabled={(date) => {
+                          // Disable dates in the past and weekends
+                          const today = new Date()
+                          today.setHours(0, 0, 0, 0)
+                          const day = date.getDay()
+                          return date < today || day === 0 || day === 6
+                        }}
+                      />
+                      
+                      {formData.assessmentDate && (
+                        <div className="border-t pt-3 mt-3">
+                          <Label className="mb-2 block">Time</Label>
+                          <div className="flex space-x-2">
+                            <select 
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              value={formData.assessmentDate ? formData.assessmentDate.getHours() : 9}
+                              onChange={(e) => {
+                                const newDate = new Date(formData.assessmentDate);
+                                newDate.setHours(parseInt(e.target.value));
+                                setFormData((prev) => ({ ...prev, assessmentDate: newDate }));
+                              }}
+                            >
+                              {Array.from({ length: 10 }, (_, i) => i + 9).map((hour) => (
+                                <option key={hour} value={hour}>
+                                  {hour > 12 ? hour - 12 : hour}:00 {hour >= 12 ? 'PM' : 'AM'}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </PopoverContent>
                 </Popover>
                 {errors.assessmentDate && <p className="text-red-500 text-sm">{errors.assessmentDate}</p>}

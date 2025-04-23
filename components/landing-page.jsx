@@ -18,7 +18,10 @@ export default function LandingPage({ navigateTo }) {
                 certifications based on real assessments and work experience.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => navigateTo("signup")}>
+                <Button 
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                  onClick={() => navigateTo("signup")}
+                >
                   Get Started <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
                 <Button
@@ -110,7 +113,7 @@ export default function LandingPage({ navigateTo }) {
 
                 <Button
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-                  onClick={() => navigateTo("signup", "worker")}
+                  onClick={() => navigateTo("workerRegistration", "worker")}
                 >
                   Register as a Worker <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -146,7 +149,7 @@ export default function LandingPage({ navigateTo }) {
 
                 <Button
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white"
-                  onClick={() => navigateTo("signup", "client")}
+                  onClick={() => navigateTo("clientRegistration", "client")}
                 >
                   Register as a Client <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -248,11 +251,14 @@ export default function LandingPage({ navigateTo }) {
           <div className="flex flex-wrap justify-center gap-4">
             <Button
               className="bg-orange-500 hover:bg-orange-600 text-white"
-              onClick={() => navigateTo("signup", "worker")}
+              onClick={() => navigateTo("workerRegistration", "worker")}
             >
               Register as a Worker
             </Button>
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white" onClick={() => navigateTo("signup", "client")}>
+            <Button
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+              onClick={() => navigateTo("clientRegistration", "client")}
+            >
               Register as a Client
             </Button>
           </div>
