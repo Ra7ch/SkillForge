@@ -1,0 +1,1 @@
+{"c":["app/layout","app/page","webpack"],"r":[],"m":["(app-pages-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=false!","(app-pages-browser)/./components/language-switcher.jsx","(app-pages-browser)/./lib/contexts/language-context.jsx","(app-pages-browser)/./lib/i18n/translations.js"]}

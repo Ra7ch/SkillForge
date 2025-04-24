@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Search, Filter, MapPin, DollarSign, Calendar, ChevronDown, Plus, Edit, Trash2, Users } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Filter, MapPin, DollarSign, Calendar, ChevronDown, Plus, Edit, Trash2, Users, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -183,6 +183,12 @@ export default function ClientJobMarketplace() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [viewingProposals, setViewingProposals] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState(null);
+  const [isClient, setIsClient] = useState(false)
+  
+  // Fix hydration issue by only rendering on client-side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   
   // New job form state
   const [newJob, setNewJob] = useState({
@@ -684,7 +690,7 @@ export default function ClientJobMarketplace() {
                           <span>{proposal.worker.location}</span>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <Briefcase className="h-4 w-4" />
+                          {isClient && <Briefcase className="h-4 w-4" />}
                           <span>{proposal.worker.completedJobs} jobs completed</span>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-600">

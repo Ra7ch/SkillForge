@@ -27,16 +27,25 @@ export default function Dashboard({ userData, userType, navigateTo }) {
   const renderWorkerDashboard = () => {
     return (
       <div className="space-y-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-1">Welcome back, {userData?.name || "Worker"}</h1>
-          <p className="text-gray-600">Track your certification progress and professional growth</p>
+        <div className="flex items-center gap-4 mb-8">
+          <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-orange-500">
+            <img 
+              src={userData?.profileImage || "/placeholder-user.jpg"} 
+              alt={userData?.name || "Worker"} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold mb-1">Welcome back, {userData?.name || "Worker"}</h1>
+            <p className="text-gray-600">Track your certification progress and professional growth</p>
+          </div>
         </div>
 
         <Tabs defaultValue="overview" onValueChange={setActiveTab}>
           <TabsList className="mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="assessments">Assessments</TabsTrigger>
-            <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
+            <TabsTrigger value="ai-tools">AI Mentor</TabsTrigger>
             <TabsTrigger value="worklog">Work Log</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
             <TabsTrigger value="mentorship">Mentorship</TabsTrigger>
@@ -466,9 +475,18 @@ export default function Dashboard({ userData, userType, navigateTo }) {
   const renderClientDashboard = () => {
     return (
       <div className="space-y-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-1">Welcome back, {userData?.name || "Client"}</h1>
-          <p className="text-gray-600">Find verified professionals for your projects</p>
+        <div className="flex items-center gap-4 mb-8">
+          <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-blue-500">
+            <img 
+              src={userData?.profileImage || "/placeholder-user.jpg"} 
+              alt={userData?.name || "Client"} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold mb-1">Welcome back, {userData?.name || "Client"}</h1>
+            <p className="text-gray-600">Find verified professionals for your projects</p>
+          </div>
         </div>
 
         <Tabs defaultValue="overview">

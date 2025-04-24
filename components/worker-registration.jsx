@@ -460,58 +460,6 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
                 {errors.experience && <p className="text-red-500 text-sm">{errors.experience}</p>}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="formalTraining">Have you received any formal training or education?</Label>
-                <RadioGroup
-                  id="formalTraining"
-                  value={formData.formalTraining}
-                  onValueChange={(value) => {
-                    setFormData((prev) => ({ ...prev, formalTraining: value }))
-                    if (errors.formalTraining) {
-                      setErrors((prev) => ({ ...prev, formalTraining: "" }))
-                    }
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="training-yes" />
-                    <Label htmlFor="training-yes">Yes</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="training-no" />
-                    <Label htmlFor="training-no">No</Label>
-                  </div>
-                </RadioGroup>
-                {errors.formalTraining && <p className="text-red-500 text-sm">{errors.formalTraining}</p>}
-              </div>
-
-              {formData.formalTraining === "yes" && (
-                <div className="space-y-2">
-                  <Label htmlFor="trainingDuration">Duration of Training/Education</Label>
-                  <Select
-                    id="trainingDuration"
-                    value={formData.trainingDuration}
-                    onValueChange={(value) => {
-                      setFormData((prev) => ({ ...prev, trainingDuration: value }))
-                      if (errors.trainingDuration) {
-                        setErrors((prev) => ({ ...prev, trainingDuration: "" }))
-                      }
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select duration" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="less-than-1-year">Less than 1 year</SelectItem>
-                      <SelectItem value="1-2-years">1-2 years</SelectItem>
-                      <SelectItem value="2-4-years">2-4 years</SelectItem>
-                      <SelectItem value="more-than-4-years">More than 4 years</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.trainingDuration && (
-                    <p className="text-red-500 text-sm">{errors.trainingDuration}</p>
-                  )}
-                </div>
-              )}
             </CardContent>
           </>
         )
