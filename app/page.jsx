@@ -9,12 +9,16 @@ import SignupForm from "@/components/signup-form"
 import WorkerRegistration from "@/components/worker-registration"
 import ClientRegistration from "@/components/client-registration"
 import Dashboard from "@/components/dashboard"
+import MentorBrowse from "@/components/mentor-browse"
+import MentorProfile from "@/components/mentor-profile"
+import MentorshipManagement from "@/components/mentorship-management"
 
 export default function SkillForge() {
   const [currentView, setCurrentView] = useState("landing")
   const [userType, setUserType] = useState(null) // "worker" or "client"
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
+  const [selectedMentor, setSelectedMentor] = useState(null)
 
   // Handle navigation
   const navigateTo = (view, type = null) => {
@@ -47,6 +51,12 @@ export default function SkillForge() {
     navigateTo("dashboard")
   }
 
+  // Handle mentor selection
+  const handleSelectMentor = (mentor) => {
+    setSelectedMentor(mentor)
+    navigateTo("mentorProfile")
+  }
+
   // Render the appropriate view
   const renderView = () => {
     switch (currentView) {
@@ -61,7 +71,13 @@ export default function SkillForge() {
       case "clientRegistration":
         return <ClientRegistration navigateTo={navigateTo} onComplete={handleRegistrationComplete} />
       case "dashboard":
-        return <Dashboard userData={userData} userType={userType} />
+        return <Dashboard userData={userData} userType={userType} navigateTo={navigateTo} />
+      case "browseMentors":
+        return <MentorBrowse onSelectMentor={handleSelectMentor} />
+      case "mentorProfile":
+        return <MentorProfile mentor={selectedMentor} navigateBack={() => navigateTo("browseMentors")} />
+      case "mentorshipManagement":
+        return <MentorshipManagement userType={userType === "worker" ? "mentor" : "mentee"} />
       default:
         return <LandingPage navigateTo={navigateTo} />
     }

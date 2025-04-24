@@ -1,13 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Award, Clock, Users, Calendar, CheckCircle, ArrowRight, FileText, Briefcase } from "lucide-react"
+import { Award, Clock, Users, Calendar, CheckCircle, ArrowRight, FileText, Briefcase, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default function Dashboard({ userData, userType }) {
+export default function Dashboard({ userData, userType, navigateTo }) {
   const [activeTab, setActiveTab] = useState("overview")
 
   // Worker dashboard content
@@ -25,6 +25,7 @@ export default function Dashboard({ userData, userType }) {
             <TabsTrigger value="assessments">Assessments</TabsTrigger>
             <TabsTrigger value="worklog">Work Log</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
+            <TabsTrigger value="mentorship">Mentorship</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -159,6 +160,29 @@ export default function Dashboard({ userData, userType }) {
                 <Button className="w-full bg-gray-900 hover:bg-gray-800">View Detailed Requirements</Button>
               </div>
             </div>
+            
+            {/* New Feature Highlight */}
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <Star className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">New: Mentorship Program</h3>
+                    <p className="text-gray-700 mb-4">
+                      Share your expertise and earn additional income by mentoring junior professionals in your field.
+                    </p>
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => navigateTo("mentorshipManagement")}
+                    >
+                      Manage Your Mentorship
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="assessments">
@@ -198,16 +222,9 @@ export default function Dashboard({ userData, userType }) {
                             <span>10:00 AM</span>
                           </div>
                         </div>
-                        <div className="mt-3">
-                          <Button size="sm" variant="outline">
-                            Reschedule
-                          </Button>
-                        </div>
                       </div>
                     </div>
                   </div>
-
-                  <p className="text-gray-500 text-sm">No past assessments found.</p>
                 </div>
               </CardContent>
             </Card>
@@ -259,6 +276,92 @@ export default function Dashboard({ userData, userType }) {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="mentorship">
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-bold">Mentorship Program</h2>
+                  <p className="text-gray-600 text-sm">Connect with professionals for skill development</p>
+                </div>
+              </div>
+
+              {/* Two column layout for Mentorship */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <Card className="bg-orange-50 border-orange-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Award className="h-5 w-5 text-orange-500 mr-2" />
+                      Become a Mentor
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4">Share your expertise and earn additional income by mentoring junior professionals in your field.</p>
+                    <div className="bg-white p-4 rounded-md mb-4">
+                      <h4 className="font-medium mb-2">Benefits of being a mentor:</h4>
+                      <ul className="space-y-2 ml-5 list-disc">
+                        <li>Earn income from training sessions</li>
+                        <li>Gain additional certification points</li>
+                        <li>Build your professional reputation</li>
+                        <li>Expand your professional network</li>
+                      </ul>
+                    </div>
+                    <Button 
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                      onClick={() => navigateTo("mentorshipManagement")}
+                    >
+                      Manage Mentorship
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Users className="h-5 w-5 text-blue-500 mr-2" />
+                      Find a Mentor
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4">Accelerate your growth by learning from experienced professionals in your field.</p>
+                    <div className="bg-white p-4 rounded-md mb-4">
+                      <h4 className="font-medium mb-2">Benefits of having a mentor:</h4>
+                      <ul className="space-y-2 ml-5 list-disc">
+                        <li>Learn industry best practices</li>
+                        <li>Get personalized guidance for certification</li>
+                        <li>Build valuable industry connections</li>
+                        <li>Progress faster in your career</li>
+                      </ul>
+                    </div>
+                    <Button 
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                      onClick={() => navigateTo("browseMentors")}
+                    >
+                      Browse Available Mentors
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Upcoming Sessions Preview */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Your Upcoming Mentorship Sessions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center p-6">
+                    <p className="text-gray-500 mb-4">You have no upcoming mentorship sessions.</p>
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigateTo("mentorshipManagement")}
+                    >
+                      View All Mentorship Activity
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     )
@@ -269,133 +372,167 @@ export default function Dashboard({ userData, userType }) {
     return (
       <div className="space-y-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-1">Welcome, {userData?.name || "Client"}</h1>
-          <p className="text-gray-600">Find and hire certified professionals for your projects</p>
+          <h1 className="text-2xl font-bold mb-1">Welcome back, {userData?.name || "Client"}</h1>
+          <p className="text-gray-600">Find verified professionals for your projects</p>
         </div>
 
-        <Tabs defaultValue="overview">
-          <TabsList className="mb-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="professionals">Find Professionals</TabsTrigger>
-            <TabsTrigger value="projects">My Projects</TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600 flex items-center">
+                Active Projects
+                <Briefcase className="h-4 w-4 text-blue-500 ml-auto" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-2xl font-bold">2</h3>
+              <p className="text-sm text-gray-600">In progress</p>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <Card className="bg-blue-50">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-blue-100 p-2 rounded-md">
-                      <Briefcase className="h-5 w-5 text-blue-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Find Qualified Professionals</h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Browse our directory of certified professionals for your project needs.
-                      </p>
-                    </div>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600 flex items-center">
+                Total Hires
+                <Users className="h-4 w-4 text-green-500 ml-auto" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-2xl font-bold">5</h3>
+              <p className="text-sm text-gray-600">Across 3 projects</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-gray-600 flex items-center">
+                Upcoming Appointments
+                <Calendar className="h-4 w-4 text-orange-500 ml-auto" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-2xl font-bold">1</h3>
+              <p className="text-sm text-gray-600">This week</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Current Projects</span>
+                <Button variant="outline" size="sm">
+                  View All
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="border rounded-md p-4">
+                  <div className="flex justify-between mb-2">
+                    <h4 className="font-medium">Kitchen Renovation</h4>
+                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">In Progress</div>
                   </div>
-                  <Button className="w-full bg-blue-500 hover:bg-blue-600">
-                    Find Professionals <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-green-50">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-green-100 p-2 rounded-md">
-                      <FileText className="h-5 w-5 text-green-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Post a Project</h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Describe your project and receive proposals from qualified professionals.
-                      </p>
-                    </div>
+                  <p className="text-sm text-gray-600 mb-3">Plumbing and electrical work for kitchen remodel</p>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>2 professionals assigned</span>
+                    <span>Due: June 30, 2025</span>
                   </div>
-                  <Button className="w-full bg-green-500 hover:bg-green-600">
-                    Post a Project <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Getting Started</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+                <div className="border rounded-md p-4">
+                  <div className="flex justify-between mb-2">
+                    <h4 className="font-medium">Bathroom Repair</h4>
+                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">In Progress</div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">Fixing tile work and plumbing issues</p>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>1 professional assigned</span>
+                    <span>Due: May 15, 2025</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Recent Professionals</span>
+                <Button variant="outline" size="sm">
+                  View All
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="border rounded-md p-4">
                   <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 rounded-full h-6 w-6 flex items-center justify-center text-gray-600 font-medium">
-                      1
+                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-sm font-medium text-gray-600">JD</span>
                     </div>
                     <div>
-                      <h4 className="font-medium">Complete Your Profile</h4>
-                      <p className="text-sm text-gray-600">
-                        Add more details about your project needs and preferences.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 rounded-full h-6 w-6 flex items-center justify-center text-gray-600 font-medium">
-                      2
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Browse Professionals</h4>
-                      <p className="text-sm text-gray-600">
-                        Search for certified professionals by skill, location, and rating.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 rounded-full h-6 w-6 flex items-center justify-center text-gray-600 font-medium">
-                      3
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Post Your First Project</h4>
-                      <p className="text-sm text-gray-600">
-                        Describe your project in detail to receive qualified proposals.
-                      </p>
+                      <h4 className="font-medium">John Doe</h4>
+                      <p className="text-sm text-gray-600 mb-1">Level 3 Plumber</p>
+                      <div className="flex items-center text-yellow-400">
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 text-gray-300" />
+                        <span className="text-xs text-gray-600 ml-1">4.0</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          <TabsContent value="professionals">
-            <Card>
-              <CardHeader>
-                <CardTitle>Find Professionals</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500 mb-4">
-                  This feature will be available soon. You'll be able to search and filter professionals by skill,
-                  location, and certification level.
+                <div className="border rounded-md p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-sm font-medium text-gray-600">AS</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium">Anna Smith</h4>
+                      <p className="text-sm text-gray-600 mb-1">Level 4 Electrician</p>
+                      <div className="flex items-center text-yellow-400">
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <Star className="h-4 w-4 fill-current" />
+                        <span className="text-xs text-gray-600 ml-1">5.0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* New Feature Highlight for Clients */}
+        <Card className="bg-blue-50 border-blue-200 mt-8">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="bg-blue-100 p-2 rounded-full">
+                <Star className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-2">New: Get Expert Mentorship</h3>
+                <p className="text-gray-700 mb-4">
+                  Learn from verified professionals and gain insights that will help you understand your projects better.
                 </p>
-                <Button disabled>Coming Soon</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="projects">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Projects</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <Button className="w-full">Post a New Project</Button>
-                  <p className="text-gray-500 text-sm">No projects found. Start by posting your first project.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => navigateTo("browseMentors")}
+                >
+                  Browse Mentors
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
