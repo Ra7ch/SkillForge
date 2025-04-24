@@ -1,4 +1,4 @@
-// File: /home/debian/Desktop/SkillForge/app/page.jsx
+// File: /home/rach/skillForgeGit/app/page.jsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

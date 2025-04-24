@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Award, ArrowLeft, ArrowRight, CalendarIcon, Check } from "lucide-react"
+import { Award, ArrowLeft, ArrowRight, CalendarIcon, Check, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import axios from "axios"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function WorkerRegistration({ navigateTo, onComplete }) {
   const [step, setStep] = useState(1)
@@ -30,28 +31,77 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
     trainingDuration: "",
     assessmentDate: null,
   })
+  const [showSpecializationPopup, setShowSpecializationPopup] = useState(false)
   const [errors, setErrors] = useState({})
 
+  // Agricultural specializations
   const professions = [
-    "Plumber",
-    "Electrician",
-    "House Service",
-    "Carpenter",
-    "Painter",
-    "HVAC Technician",
-    "Mason",
-    "Roofer",
+    "Crop Production",
+    "Animal Production",
+    "Forestry and Agroforestry",
+    "Specialized Agriculture",
+    "Soil and Environmental Sciences",
+    "Agricultural Engineering",
+    "Agribusiness and Economics",
+    "Food Science and Technology",
+    "Sustainable and Organic Agriculture",
+    "Agricultural Education and Extension"
   ]
 
-  const specializations = {
-    Plumber: ["Residential plumbing", "Pipe plumbing", "Commercial plumbing", "Drainage systems"],
-    Electrician: ["Residential wiring", "Commercial electrical", "Industrial electrical", "Lighting systems"],
-    "House Service": ["Cleaning", "Maintenance", "Gardening", "Home repairs"],
-    Carpenter: ["Furniture making", "Framing", "Finish carpentry", "Cabinet making"],
-    Painter: ["Interior painting", "Exterior painting", "Decorative painting", "Commercial painting"],
-    "HVAC Technician": ["Installation", "Maintenance", "Repair", "Commercial HVAC"],
-    Mason: ["Brick laying", "Stone masonry", "Concrete work", "Tile setting"],
-    Roofer: ["Shingle roofing", "Metal roofing", "Roof repair", "Waterproofing"],
+  // Subspecializations for each profession
+  const subspecializations = {
+    "Crop Production": [
+      "Agronomy",
+      "Horticulture",
+      "Plant Breeding and Genetics",
+      "Plant Pathology",
+      "Entomology"
+    ],
+    "Animal Production": [
+      "Animal Husbandry",
+      "Dairy Science",
+      "Poultry Science",
+      "Aquaculture"
+    ],
+    "Forestry and Agroforestry": [
+      "Forestry",
+      "Agroforestry"
+    ],
+    "Specialized Agriculture": [
+      "Apiculture",
+      "Sericulture",
+      "Mushroom Cultivation"
+    ],
+    "Soil and Environmental Sciences": [
+      "Soil Science",
+      "Agricultural Chemistry",
+      "Environmental Science"
+    ],
+    "Agricultural Engineering": [
+      "Farm Machinery",
+      "Irrigation Engineering",
+      "Post-Harvest Technology"
+    ],
+    "Agribusiness and Economics": [
+      "Agricultural Economics",
+      "Agribusiness Management",
+      "Rural Development"
+    ],
+    "Food Science and Technology": [
+      "Food Processing",
+      "Food Safety and Quality",
+      "Nutrition Science"
+    ],
+    "Sustainable and Organic Agriculture": [
+      "Organic Farming",
+      "Permaculture",
+      "Climate-Smart Agriculture"
+    ],
+    "Agricultural Education and Extension": [
+      "Agricultural Extension",
+      "Agricultural Education",
+      "Communication and Outreach"
+    ]
   }
 
   const handleChange = (e) => {
@@ -65,21 +115,22 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
   }
 
   const handleSpecializationChange = (value) => {
-    setFormData((prev) => {
-      const specializations = [...prev.specializations]
-
-      if (specializations.includes(value)) {
-        return {
-          ...prev,
-          specializations: specializations.filter((item) => item !== value),
-        }
-      } else {
-        return {
-          ...prev,
-          specializations: [...specializations, value],
-        }
-      }
-    })
+    let updatedSpecializations = [...formData.specializations]
+    
+    if (updatedSpecializations.includes(value)) {
+      updatedSpecializations = updatedSpecializations.filter(spec => spec !== value)
+    } else {
+      updatedSpecializations.push(value)
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      specializations: updatedSpecializations
+    }))
+    
+    if (errors.specializations) {
+      setErrors(prev => ({ ...prev, specializations: "" }))
+    }
   }
 
   const validateStep = (currentStep) => {
@@ -148,6 +199,7 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
           email: formData.email,
           assessmentDate: formattedDate,
           profession: formData.profession,
+          specializations: formData.specializations,
           meetingLink: googleMeetLink
         });
         
@@ -284,11 +336,11 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
           <>
             <CardHeader>
               <CardTitle>Professional Information</CardTitle>
-              <CardDescription>Tell us about your profession and experience</CardDescription>
+              <CardDescription>Tell us about your agricultural specialization and experience</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label>Select Profession</Label>
+                <Label>Select Agricultural Specialization</Label>
                 <div className="grid grid-cols-2 gap-2">
                   {professions.map((profession) => (
                     <div
@@ -303,9 +355,10 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
                           ...prev,
                           profession,
                           specializations: [], // Reset specializations when profession changes
-                        }))
+                        }));
+                        setShowSpecializationPopup(true);
                         if (errors.profession) {
-                          setErrors((prev) => ({ ...prev, profession: "" }))
+                          setErrors((prev) => ({ ...prev, profession: "" }));
                         }
                       }}
                     >
@@ -318,55 +371,145 @@ export default function WorkerRegistration({ navigateTo, onComplete }) {
                 {errors.profession && <p className="text-red-500 text-sm">{errors.profession}</p>}
               </div>
 
+              {formData.profession && (
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Your Specializations</Label>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowSpecializationPopup(true)}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                  
+                  {formData.specializations.length > 0 ? (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {formData.specializations.map((spec) => (
+                        <div key={spec} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">
+                          {spec}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-sm">No specializations selected yet</p>
+                  )}
+                  {errors.specializations && <p className="text-red-500 text-sm">{errors.specializations}</p>}
+                </div>
+              )}
+
+              {/* Specialization Popup */}
+              {showSpecializationPopup && formData.profession && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white rounded-lg w-full max-w-md p-6 max-h-[80vh] overflow-y-auto">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold">Select Your Specializations</h3>
+                      <button 
+                        type="button" 
+                        className="text-gray-500 hover:text-gray-700"
+                        onClick={() => setShowSpecializationPopup(false)}
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-3 mb-6">
+                      {subspecializations[formData.profession]?.map((spec) => (
+                        <div 
+                          key={spec}
+                          className={`border p-3 rounded-md cursor-pointer transition-all ${
+                            formData.specializations.includes(spec)
+                              ? "border-orange-500 bg-orange-50"
+                              : "border-gray-200 hover:border-orange-100"
+                          }`}
+                          onClick={() => handleSpecializationChange(spec)}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span>{spec}</span>
+                            {formData.specializations.includes(spec) && (
+                              <Check className="h-4 w-4 text-orange-500" />
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <Button 
+                      className="w-full"
+                      onClick={() => setShowSpecializationPopup(false)}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
-                <Label>Years of Experience</Label>
-                <RadioGroup
+                <Label htmlFor="experience">Years of Experience</Label>
+                <Input
+                  id="experience"
+                  name="experience"
+                  type="number"
+                  placeholder="5"
                   value={formData.experience}
+                  onChange={handleChange}
+                  className={errors.experience ? "border-red-500" : ""}
+                />
+                {errors.experience && <p className="text-red-500 text-sm">{errors.experience}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="formalTraining">Have you received any formal training or education?</Label>
+                <RadioGroup
+                  id="formalTraining"
+                  value={formData.formalTraining}
                   onValueChange={(value) => {
-                    setFormData((prev) => ({ ...prev, experience: value }))
-                    if (errors.experience) {
-                      setErrors((prev) => ({ ...prev, experience: "" }))
+                    setFormData((prev) => ({ ...prev, formalTraining: value }))
+                    if (errors.formalTraining) {
+                      setErrors((prev) => ({ ...prev, formalTraining: "" }))
                     }
                   }}
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="1-2 years" id="exp-1" />
-                    <Label htmlFor="exp-1">1-2 years</Label>
+                    <RadioGroupItem value="yes" id="training-yes" />
+                    <Label htmlFor="training-yes">Yes</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="3-5 years" id="exp-2" />
-                    <Label htmlFor="exp-2">3-5 years</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="5-10 years" id="exp-3" />
-                    <Label htmlFor="exp-3">5-10 years</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="10+ years" id="exp-4" />
-                    <Label htmlFor="exp-4">10+ years</Label>
+                    <RadioGroupItem value="no" id="training-no" />
+                    <Label htmlFor="training-no">No</Label>
                   </div>
                 </RadioGroup>
-                {errors.experience && <p className="text-red-500 text-sm">{errors.experience}</p>}
+                {errors.formalTraining && <p className="text-red-500 text-sm">{errors.formalTraining}</p>}
               </div>
 
-              {formData.profession && (
+              {formData.formalTraining === "yes" && (
                 <div className="space-y-2">
-                  <Label>Area of Experience (Specializations)</Label>
-                  <div className="space-y-2">
-                    {specializations[formData.profession]?.map((specialization) => (
-                      <div key={specialization} className="flex items-start space-x-2">
-                        <Checkbox
-                          id={specialization}
-                          checked={formData.specializations.includes(specialization)}
-                          onCheckedChange={() => handleSpecializationChange(specialization)}
-                        />
-                        <Label htmlFor={specialization} className="font-normal">
-                          {specialization}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                  {errors.specializations && <p className="text-red-500 text-sm">{errors.specializations}</p>}
+                  <Label htmlFor="trainingDuration">Duration of Training/Education</Label>
+                  <Select
+                    id="trainingDuration"
+                    value={formData.trainingDuration}
+                    onValueChange={(value) => {
+                      setFormData((prev) => ({ ...prev, trainingDuration: value }))
+                      if (errors.trainingDuration) {
+                        setErrors((prev) => ({ ...prev, trainingDuration: "" }))
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="less-than-1-year">Less than 1 year</SelectItem>
+                      <SelectItem value="1-2-years">1-2 years</SelectItem>
+                      <SelectItem value="2-4-years">2-4 years</SelectItem>
+                      <SelectItem value="more-than-4-years">More than 4 years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.trainingDuration && (
+                    <p className="text-red-500 text-sm">{errors.trainingDuration}</p>
+                  )}
                 </div>
               )}
             </CardContent>

@@ -44,13 +44,13 @@ export default function MentorProfile({ mentor, navigateBack }) {
     setIsClient(true)
   }, [])
 
-  // Mock mentor data - would come from API in a real app
-  const mentorData = mentor || {
+  // Use provided mentor data or fallback to default if not available
+  const mentorData = mentor ?? {
     id: "m1",
     name: "Maria Smith",
     level: 5,
-    profession: "Electrician",
-    specialty: "Residential wiring",
+    profession: "Crop Production",
+    specialty: "Agronomy",
     rating: 4.9,
     reviewCount: 42,
     hourlyRate: 60,
@@ -59,8 +59,8 @@ export default function MentorProfile({ mentor, navigateBack }) {
       "5-sessions": 275, // $55/hour
       "10-sessions": 500, // $50/hour
     } : {},
-    about: "Master Electrician with over 15 years of experience in residential and commercial electrical work. Certified instructor for electrical apprenticeship programs.",
-    certifications: isClient ? ["Master Electrician License", "Electrical Inspector Certification", "OSHA Safety Certification"] : [],
+    about: "Master Agronomist with over 15 years of experience in crop production and soil management. Certified instructor for agricultural training programs with expertise in sustainable farming practices.",
+    certifications: isClient ? ["Advanced Agronomy Certification", "Sustainable Farming Practices", "Agricultural Education Certification"] : [],
     availableTimeSlots: isClient ? [
       { date: new Date(Date.now() + 86400000), slots: ["09:00", "13:00", "15:00"] },
       { date: new Date(Date.now() + 86400000 * 2), slots: ["10:00", "14:00"] },
@@ -113,7 +113,7 @@ export default function MentorProfile({ mentor, navigateBack }) {
         onClick={navigateBack}
       >
         <ChevronLeft className="h-4 w-4 mr-1" />
-        Back to mentors
+        Back
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

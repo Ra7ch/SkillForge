@@ -1,6 +1,6 @@
 "use client"
 
-import { Award, Clock, Target, CheckCircle, Users, Star, ChevronRight, ArrowRight } from "lucide-react"
+import { Award, Clock, Target, CheckCircle, Users, Star, ChevronRight, ArrowRight, Brain, MessageSquare, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
@@ -191,6 +191,73 @@ export default function LandingPage({ navigateTo }) {
               </div>
               <h3 className="text-xl font-bold mb-2">Earn Certifications</h3>
               <p className="text-gray-600">Receive industry-recognized certifications that validate your expertise.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Features Section */}
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">AI-Powered Learning Support</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Our platform integrates advanced AI tools to accelerate your certification journey and provide 24/7 learning assistance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <img 
+                src="https://placehold.co/600x400/e6f2ff/1a73e8?text=AI+Learning+Tools" 
+                alt="AI Learning Tools" 
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <Brain className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold">AI Assessment Generator</h3>
+                </div>
+                <p className="text-gray-600 pl-11">
+                  Create custom practice assessments tailored to your agricultural specialization and experience level.
+                  Get immediate feedback and detailed explanations to enhance your learning.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <MessageSquare className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold">AI Mentoring Assistant</h3>
+                </div>
+                <p className="text-gray-600 pl-11">
+                  Access a personal AI mentor that can answer your questions, explain complex agricultural concepts, and help you prepare for certification assessments.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <BookOpen className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold">Personalized Study Resources</h3>
+                </div>
+                <p className="text-gray-600 pl-11">
+                  Explore curated learning materials specifically chosen to address your knowledge gaps and strengthen your agricultural expertise.
+                </p>
+              </div>
+
+              <Button 
+                className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => navigateTo("signup")}
+              >
+                Start Learning with AI <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
             </div>
           </div>
         </div>

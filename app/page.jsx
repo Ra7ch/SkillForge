@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Award, Settings } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Award, Settings, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import LandingPage from "@/components/landing-page"
 import LoginForm from "@/components/login-form"
@@ -12,6 +12,12 @@ import Dashboard from "@/components/dashboard"
 import MentorBrowse from "@/components/mentor-browse"
 import MentorProfile from "@/components/mentor-profile"
 import MentorshipManagement from "@/components/mentorship-management"
+import dynamic from "next/dynamic"
+
+// Dynamically import the JobMarketplace component
+const JobMarketplace = dynamic(() => import("@/app/job-marketplace/page").then(mod => mod.default), {
+  loading: () => <p>Loading Job Marketplace...</p>,
+})
 
 export default function SkillForge() {
   const [currentView, setCurrentView] = useState("landing")
@@ -19,6 +25,64 @@ export default function SkillForge() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
   const [selectedMentor, setSelectedMentor] = useState(null)
+  const [navigationHistory, setNavigationHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(0)
+  const [isHistoryNavigation, setIsHistoryNavigation] = useState(false)
+
+  // Initialize history and handle browser back/forward buttons
+  useEffect(() => {
+    // Set initial history
+    if (navigationHistory.length === 0) {
+      setNavigationHistory([{ view: currentView, type: userType }])
+    }
+
+    // Handle popstate event (when browser back/forward buttons are clicked)
+    const handlePopState = (event) => {
+      if (event.state) {
+        setIsHistoryNavigation(true)
+        setCurrentView(event.state.view)
+        if (event.state.type) {
+          setUserType(event.state.type)
+        }
+      }
+    }
+
+    // Listen for popstate events
+    window.addEventListener('popstate', handlePopState)
+
+    // Initialize history state
+    if (!window.history.state) {
+      window.history.replaceState(
+        { view: currentView, type: userType },
+        '',
+        `#${currentView}`
+      )
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
+
+  // Update history when navigation changes
+  useEffect(() => {
+    if (!isHistoryNavigation && currentView) {
+      // Add new state to browser history
+      window.history.pushState(
+        { view: currentView, type: userType },
+        '',
+        `#${currentView}`
+      )
+
+      // Update our navigation history
+      const newHistory = [...navigationHistory.slice(0, historyIndex + 1), { view: currentView, type: userType }]
+      setNavigationHistory(newHistory)
+      setHistoryIndex(newHistory.length - 1)
+    }
+
+    // Reset flag after handling
+    setIsHistoryNavigation(false)
+  }, [currentView, userType])
 
   // Handle navigation
   const navigateTo = (view, type = null) => {
@@ -29,10 +93,47 @@ export default function SkillForge() {
     window.scrollTo(0, 0)
   }
 
+  // Handle backward navigation
+  const navigateBack = () => {
+    if (historyIndex > 0) {
+      const prevIndex = historyIndex - 1
+      const prevState = navigationHistory[prevIndex]
+      
+      setIsHistoryNavigation(true)
+      setHistoryIndex(prevIndex)
+      setCurrentView(prevState.view)
+      if (prevState.type) {
+        setUserType(prevState.type)
+      }
+      
+      // Update browser history
+      window.history.back()
+    }
+  }
+
+  // Handle forward navigation
+  const navigateForward = () => {
+    if (historyIndex < navigationHistory.length - 1) {
+      const nextIndex = historyIndex + 1
+      const nextState = navigationHistory[nextIndex]
+      
+      setIsHistoryNavigation(true)
+      setHistoryIndex(nextIndex)
+      setCurrentView(nextState.view)
+      if (nextState.type) {
+        setUserType(nextState.type)
+      }
+      
+      // Update browser history
+      window.history.forward()
+    }
+  }
+
   // Handle login
   const handleLogin = (user) => {
     setUserData(user)
     setIsLoggedIn(true)
+    setUserType(user.type || "worker") // Ensure userType is set from login data
     navigateTo("dashboard")
   }
 
@@ -75,9 +176,26 @@ export default function SkillForge() {
       case "browseMentors":
         return <MentorBrowse onSelectMentor={handleSelectMentor} />
       case "mentorProfile":
-        return <MentorProfile mentor={selectedMentor} navigateBack={() => navigateTo("browseMentors")} />
+        return <MentorProfile 
+          mentor={selectedMentor} 
+          navigateBack={navigateBack}
+        />
       case "mentorshipManagement":
         return <MentorshipManagement userType={userType === "worker" ? "mentor" : "mentee"} />
+      case "job-marketplace":
+        return (
+          <div className="container mx-auto py-8">
+            <Button 
+              variant="ghost" 
+              className="mb-6 flex items-center gap-1" 
+              onClick={() => navigateTo("dashboard")}
+            >
+              <ArrowLeft size={18} />
+              Back to Dashboard
+            </Button>
+            <JobMarketplace />
+          </div>
+        )
       default:
         return <LandingPage navigateTo={navigateTo} />
     }

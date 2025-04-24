@@ -54,8 +54,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m1",
       name: "Maria Smith",
       level: 5,
-      profession: "Electrician",
-      specialty: "Residential wiring",
+      profession: "Crop Production",
+      specialty: "Agronomy",
       rating: 4.9,
       reviewCount: 42,
       hourlyRate: 60,
@@ -65,8 +65,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m2",
       name: "David Johnson",
       level: 4,
-      profession: "Plumber",
-      specialty: "Commercial plumbing",
+      profession: "Animal Production",
+      specialty: "Dairy Science",
       rating: 4.7,
       reviewCount: 28,
       hourlyRate: 55,
@@ -76,8 +76,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m3",
       name: "James Wilson",
       level: 3,
-      profession: "Carpenter",
-      specialty: "Cabinet making",
+      profession: "Forestry and Agroforestry",
+      specialty: "Agroforestry",
       rating: 4.5,
       reviewCount: 15,
       hourlyRate: 45,
@@ -87,8 +87,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m4",
       name: "Ana Rodriguez",
       level: 5,
-      profession: "Painter",
-      specialty: "Interior painting",
+      profession: "Sustainable and Organic Agriculture",
+      specialty: "Organic Farming",
       rating: 5.0,
       reviewCount: 37,
       hourlyRate: 65,
@@ -98,8 +98,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m5",
       name: "Michael Chen",
       level: 4,
-      profession: "Electrician",
-      specialty: "Industrial electrical",
+      profession: "Agricultural Engineering",
+      specialty: "Irrigation Engineering",
       rating: 4.8,
       reviewCount: 31,
       hourlyRate: 70,
@@ -109,8 +109,8 @@ export default function MentorBrowse({ onSelectMentor }) {
       id: "m6",
       name: "Sarah Miller",
       level: 3,
-      profession: "HVAC Technician",
-      specialty: "Residential HVAC",
+      profession: "Food Science and Technology",
+      specialty: "Food Processing",
       rating: 4.6,
       reviewCount: 23,
       hourlyRate: 50,
@@ -199,17 +199,20 @@ export default function MentorBrowse({ onSelectMentor }) {
                         onValueChange={(value) => handleFilterChange("profession", value)}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="All Professions" />
+                          <SelectValue placeholder="All Specializations" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">All Professions</SelectItem>
-                          <SelectItem value="Electrician">Electrician</SelectItem>
-                          <SelectItem value="Plumber">Plumber</SelectItem>
-                          <SelectItem value="Carpenter">Carpenter</SelectItem>
-                          <SelectItem value="Painter">Painter</SelectItem>
-                          <SelectItem value="HVAC Technician">HVAC Technician</SelectItem>
-                          <SelectItem value="Mason">Mason</SelectItem>
-                          <SelectItem value="Roofer">Roofer</SelectItem>
+                          <SelectItem value="all">All Specializations</SelectItem>
+                          <SelectItem value="Crop Production">Crop Production</SelectItem>
+                          <SelectItem value="Animal Production">Animal Production</SelectItem>
+                          <SelectItem value="Forestry and Agroforestry">Forestry and Agroforestry</SelectItem>
+                          <SelectItem value="Specialized Agriculture">Specialized Agriculture</SelectItem>
+                          <SelectItem value="Soil and Environmental Sciences">Soil and Environmental Sciences</SelectItem>
+                          <SelectItem value="Agricultural Engineering">Agricultural Engineering</SelectItem>
+                          <SelectItem value="Agribusiness and Economics">Agribusiness and Economics</SelectItem>
+                          <SelectItem value="Food Science and Technology">Food Science and Technology</SelectItem>
+                          <SelectItem value="Sustainable and Organic Agriculture">Sustainable and Organic Agriculture</SelectItem>
+                          <SelectItem value="Agricultural Education and Extension">Agricultural Education and Extension</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -364,17 +367,20 @@ export default function MentorBrowse({ onSelectMentor }) {
                       onValueChange={(value) => handleFilterChange("profession", value)}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="All Professions" />
+                        <SelectValue placeholder="All Specializations" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Professions</SelectItem>
-                        <SelectItem value="Electrician">Electrician</SelectItem>
-                        <SelectItem value="Plumber">Plumber</SelectItem>
-                        <SelectItem value="Carpenter">Carpenter</SelectItem>
-                        <SelectItem value="Painter">Painter</SelectItem>
-                        <SelectItem value="HVAC Technician">HVAC Technician</SelectItem>
-                        <SelectItem value="Mason">Mason</SelectItem>
-                        <SelectItem value="Roofer">Roofer</SelectItem>
+                        <SelectItem value="all">All Specializations</SelectItem>
+                        <SelectItem value="Crop Production">Crop Production</SelectItem>
+                        <SelectItem value="Animal Production">Animal Production</SelectItem>
+                        <SelectItem value="Forestry and Agroforestry">Forestry and Agroforestry</SelectItem>
+                        <SelectItem value="Specialized Agriculture">Specialized Agriculture</SelectItem>
+                        <SelectItem value="Soil and Environmental Sciences">Soil and Environmental Sciences</SelectItem>
+                        <SelectItem value="Agricultural Engineering">Agricultural Engineering</SelectItem>
+                        <SelectItem value="Agribusiness and Economics">Agribusiness and Economics</SelectItem>
+                        <SelectItem value="Food Science and Technology">Food Science and Technology</SelectItem>
+                        <SelectItem value="Sustainable and Organic Agriculture">Sustainable and Organic Agriculture</SelectItem>
+                        <SelectItem value="Agricultural Education and Extension">Agricultural Education and Extension</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
